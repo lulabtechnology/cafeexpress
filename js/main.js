@@ -1,159 +1,163 @@
 /* ============================================================================
-   Tienda mínima — manejo de errores + logs + cache-busting
+   Tienda mínima — listado + detalle (product.html) + WhatsApp + mejoras UX
    ========================================================================== */
 
-log('boot', 'Inicializando tienda…');
-
-// Ejecuta init incluso si DOM ya está listo
 if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', init);
+  document.addEventListener('DOMContentLoaded', boot);
 } else {
-  init();
+  boot();
 }
 
-async function init() {
+async function boot() {
+  const page = isProductDetailPage() ? 'detail' : 'list';
   try {
-    // DOM requerido
-    const ids = ['storeName','storeNameHeading','storeNameFooter','heroTagline',
-      'productsGrid','searchInput','tagFilter','waContactBtn','contactForm'];
-    for (const id of ids) {
-      if (!document.getElementById(id)) {
-        showAlert('error', `Falta elemento del DOM: #${id}`);
+    applyBranding();
+
+    if (page === 'list') {
+      skeletonCards(6);
+      const products = await loadProducts();
+      if (!Array.isArray(products) || !products.length) {
+        showAlert('warning', 'No hay productos para mostrar.');
+        return setEmptyState('No hay productos disponibles.');
+      }
+      populateTagFilter(products);
+      renderProducts(products);
+      wireListUI(products);
+    } else {
+      const products = await loadProducts();
+      const id = getQuery('id');
+      if (!id) {
+        showAlert('error','Falta el parámetro ?id en la URL.');
         return;
       }
-    }
-
-    // Config requerida
-    if ([window.STORE_NAME,window.WHATSAPP_NUMBER,window.PRIMARY_COLOR,window.HERO_TAGLINE]
-      .some(v => typeof v !== 'string')) {
-      showAlert('error','No se cargó js/config.js correctamente.');
-      return;
-    }
-
-    // Branding
-    document.getElementById('storeName').textContent = window.STORE_NAME;
-    document.getElementById('storeNameHeading').textContent = window.STORE_NAME;
-    document.getElementById('storeNameFooter').textContent = window.STORE_NAME;
-    document.getElementById('heroTagline').textContent = window.HERO_TAGLINE;
-    document.title = `${window.STORE_NAME} — Café y accesorios`;
-
-    // Validar número de WhatsApp
-    if (!/^\d{8,15}$/.test(window.WHATSAPP_NUMBER)) {
-      showAlert('warning','WHATSAPP_NUMBER no parece válido (8–15 dígitos, sin "+").');
-    }
-
-    // Acento
-    applyAccent(window.PRIMARY_COLOR);
-
-    // Skeletons mientras carga
-    skeletonCards(6);
-
-    // Cargar productos
-    const products = await loadProducts();
-    log('data', `Productos cargados: ${Array.isArray(products) ? products.length : 'inválido'}`);
-
-    if (!Array.isArray(products)) {
-      showAlert('error','products.json no es un arreglo.');
-      return setEmptyState('No se pudieron leer los productos.');
-    }
-    if (products.length === 0) {
-      showAlert('warning','No hay productos para mostrar.');
-      return setEmptyState('No hay productos disponibles.');
-    }
-
-    populateTagFilter(products);
-    renderProducts(products);
-
-    // Filtros
-    document.getElementById('searchInput').addEventListener('input', () => renderProducts(products));
-    document.getElementById('tagFilter').addEventListener('change', () => renderProducts(products));
-
-    // WhatsApp contacto
-    document.getElementById('waContactBtn').addEventListener('click', () => {
-      openWhatsApp(`Hola, me gustaría obtener más información sobre ${window.STORE_NAME}.`);
-    });
-
-    // Formulario
-    document.getElementById('contactForm').addEventListener('submit', (e) => {
-      e.preventDefault();
-      const name = (document.getElementById('name').value || '').trim();
-      const email = (document.getElementById('email').value || '').trim();
-      const message = (document.getElementById('message').value || '').trim();
-      if (!name || !email || !message) {
-        showAlert('warning','Completa todos los campos.');
+      const product = products.find(p => p.id === id);
+      if (!product) {
+        showAlert('error','No se encontró el producto solicitado.');
         return;
       }
-      openWhatsApp(`Hola, soy ${name} (${email}).\nMensaje: ${message}`);
-    });
-
+      renderProductDetail(product);
+    }
   } catch (err) {
     console.error(err);
-    showAlert('error','Error inesperado al iniciar la tienda.');
+    showAlert('error', 'Ocurrió un error inesperado.');
   }
+}
+
+/* ------------------------- Detección de página ----------------------------- */
+function isProductDetailPage() {
+  return location.pathname.endsWith('product.html');
+}
+
+/* ------------------------- Branding / acento --------------------------------*/
+function applyBranding() {
+  const nameEls = ['storeName','storeNameHeading','storeNameFooter'];
+  for (const id of nameEls) {
+    const el = document.getElementById(id);
+    if (el && typeof window.STORE_NAME === 'string') el.textContent = window.STORE_NAME;
+  }
+  const hero = document.getElementById('heroTagline');
+  if (hero && typeof window.HERO_TAGLINE === 'string') hero.textContent = window.HERO_TAGLINE;
+  document.title = `${window.STORE_NAME || 'Tienda'} — Café y accesorios`;
+
+  // Acento
+  const bg=`bg-${window.PRIMARY_COLOR}`, txt=`text-${window.PRIMARY_COLOR}`, bd=`border-${window.PRIMARY_COLOR}`, rg=`ring-${window.PRIMARY_COLOR}`;
+  document.querySelectorAll('.accent-bg').forEach(el=>el.classList.add(bg));
+  document.querySelectorAll('.accent-text').forEach(el=>el.classList.add(txt));
+  document.querySelectorAll('.accent-border').forEach(el=>el.classList.add(bd));
+  document.querySelectorAll('.accent-ring').forEach(el=>el.classList.add(rg));
 }
 
 /* ------------------------- Carga con cache-busting ------------------------- */
 async function loadProducts() {
-  const url = `./data/products.json?v=${Date.now()}`; // evita caché CDN
   try {
-    log('fetch','Solicitando products.json…');
-    const res = await fetch(url, { cache: 'no-store' });
-    log('fetch',`HTTP ${res.status}`);
+    const res = await fetch(`./data/products.json?v=${Date.now()}`, { cache: 'no-store' });
     if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    const data = await res.json();
-    return data;
+    return await res.json();
   } catch (err) {
-    console.warn('Fallo fetch products.json → uso fallback', err);
+    console.warn('Fallo cargando products.json. Intento fallback.', err);
     const node = document.getElementById('products-fallback');
     try {
-      const data = JSON.parse(node?.textContent || '[]');
-      if (!data.length) {
-        showAlert('error','No se pudo cargar data/products.json ni el fallback.');
-      } else {
-        showAlert('warning','Usando datos locales de emergencia (fallback).');
-      }
-      return data;
+      return JSON.parse(node?.textContent || '[]');
     } catch {
-      showAlert('error','Fallback de productos inválido en index.html.');
       return [];
     }
   }
 }
 
-/* ------------------------- Render ----------------------------------------- */
+/* ------------------------- LISTA: búsqueda, filtro y render ---------------- */
+function wireListUI(products) {
+  const s = document.getElementById('searchInput');
+  const t = document.getElementById('tagFilter');
+  const waBtn = document.getElementById('waContactBtn');
+  const form = document.getElementById('contactForm');
+
+  if (s) s.addEventListener('input', () => renderProducts(products));
+  if (t) t.addEventListener('change', () => renderProducts(products));
+  if (waBtn) waBtn.addEventListener('click', () => {
+    openWhatsApp(`Hola, me gustaría obtener más información sobre ${window.STORE_NAME}.`);
+  });
+
+  if (form) form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = (document.getElementById('name').value || '').trim();
+    const email = (document.getElementById('email').value || '').trim();
+    const message = (document.getElementById('message').value || '').trim();
+    if (!name || !email || !message) return showAlert('warning','Completa todos los campos.');
+    openWhatsApp(`Hola, soy ${name} (${email}).\nMensaje: ${message}`);
+  });
+}
+
+function populateTagFilter(products) {
+  const select = document.getElementById('tagFilter');
+  if (!select) return;
+  const base = select.querySelector('option[value=""]');
+  select.innerHTML = '';
+  if (base) select.appendChild(base);
+  const tags = Array.from(new Set(products.map(p => (p.tag||'').toLowerCase()))).filter(Boolean).sort();
+  for (const t of tags) {
+    const opt = document.createElement('option');
+    opt.value = t;
+    opt.textContent = t.charAt(0).toUpperCase() + t.slice(1);
+    select.appendChild(opt);
+  }
+}
+
 function renderProducts(allProducts) {
   const grid = document.getElementById('productsGrid');
   if (!grid) return;
-
   grid.innerHTML = '';
 
-  const q = (document.getElementById('searchInput').value || '').toLowerCase();
-  const tag = document.getElementById('tagFilter').value;
+  const q = (document.getElementById('searchInput')?.value || '').toLowerCase();
+  const tag = (document.getElementById('tagFilter')?.value || '');
 
   const filtered = allProducts.filter(p => {
-    const matchesQuery = !q ||
-      p.name.toLowerCase().includes(q) ||
-      p.description.toLowerCase().includes(q) ||
-      p.tag.toLowerCase().includes(q);
+    const matchesQuery = !q || p.name.toLowerCase().includes(q) || p.description.toLowerCase().includes(q) || p.tag.toLowerCase().includes(q);
     const matchesTag = !tag || p.tag === tag;
     return matchesQuery && matchesTag;
   });
 
-  if (filtered.length === 0) {
-    return setEmptyState('No encontramos productos con esos filtros.');
-  }
+  if (!filtered.length) return setEmptyState('No encontramos productos con esos filtros.');
 
   for (const product of filtered) {
     const card = document.createElement('article');
-    card.className = 'bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm hover:shadow-md transition';
+    card.className = 'group bg-white rounded-xl border border-stone-200 overflow-hidden shadow-sm hover:shadow-md transition';
+
     card.innerHTML = `
-      <div class="aspect-[4/3] bg-stone-100 overflow-hidden">
-        <img src="${product.image}" alt="${escapeHtml(product.name)}"
-             class="w-full h-full object-cover"
-             onerror="this.src='./assets/placeholder.svg';"/>
-      </div>
+      <a href="./product.html?id=${encodeURIComponent(product.id)}" class="block">
+        <div class="relative aspect-[4/3] bg-stone-100 overflow-hidden">
+          <img src="${product.image}" alt="${escapeHtml(product.name)}"
+               class="w-full h-full object-cover transition duration-200 group-hover:scale-[1.02]"
+               onerror="this.src='./assets/placeholder.svg';"/>
+          <!-- overlay oscuro suave -->
+          <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition"></div>
+        </div>
+      </a>
       <div class="p-4">
-        <h3 class="font-semibold text-lg leading-snug">${escapeHtml(product.name)}</h3>
+        <h3 class="font-semibold text-lg leading-snug">
+          <a href="./product.html?id=${encodeURIComponent(product.id)}" class="hover:underline">
+            ${escapeHtml(product.name)}
+          </a>
+        </h3>
         <p class="mt-1 text-sm text-stone-600">${escapeHtml(product.description)}</p>
         <div class="mt-3 flex items-center justify-between">
           <span class="font-semibold">$${Number(product.price).toFixed(2)}</span>
@@ -164,15 +168,45 @@ function renderProducts(allProducts) {
         <button class="mt-4 w-full accent-bg text-white px-4 py-2.5 rounded-lg shadow hover:opacity-90 transition">
           Comprar por WhatsApp
         </button>
-      </div>`;
+      </div>
+    `;
     grid.appendChild(card);
 
-    const btn = card.querySelector('button');
-    btn.addEventListener('click', () => goToWhatsApp(product));
+    card.querySelector('button')?.addEventListener('click', () => goToWhatsApp(product));
   }
 }
 
-/* ------------------------- Skeleton / Empty -------------------------------- */
+/* ------------------------- DETALLE: product.html --------------------------- */
+function renderProductDetail(p) {
+  // Branding en la cabecera
+  const n1 = document.getElementById('storeName');
+  const n2 = document.getElementById('storeNameFooter');
+  if (n1) n1.textContent = window.STORE_NAME;
+  if (n2) n2.textContent = window.STORE_NAME;
+
+  // Pinta datos
+  document.getElementById('detailName').textContent = p.name;
+  document.getElementById('detailDesc').textContent = p.description;
+  document.getElementById('detailPrice').textContent = `$${Number(p.price).toFixed(2)}`;
+  document.getElementById('detailTag').textContent = p.tag || '';
+  const img = document.getElementById('detailImage');
+  img.src = p.image || './assets/placeholder.svg';
+  img.alt = p.name;
+  img.onerror = () => { img.src = './assets/placeholder.svg'; };
+
+  // Botón WhatsApp
+  document.getElementById('detailBuy').addEventListener('click', () => {
+    const text = `Hola, me interesa *${p.name}* (USD ${Number(p.price).toFixed(2)}). ¿Está disponible?`;
+    openWhatsApp(text);
+  });
+
+  // Acento (aplicar clases dinámicas)
+  const bg=`bg-${window.PRIMARY_COLOR}`, bd=`border-${window.PRIMARY_COLOR}`;
+  document.getElementById('detailBuy').classList.add(bg);
+  document.querySelectorAll('.accent-border').forEach(el => el.classList.add(bd));
+}
+
+/* ------------------------- Skeleton / Empty / Alertas ---------------------- */
 function skeletonCards(n=6){
   const grid=document.getElementById('productsGrid'); if(!grid) return;
   grid.innerHTML='';
@@ -194,19 +228,21 @@ function setEmptyState(msg){
   const grid=document.getElementById('productsGrid'); if(!grid) return;
   grid.innerHTML = `<div class="sm:col-span-2 lg:col-span-3 text-center text-stone-500">${escapeHtml(msg)}</div>`;
 }
-
-/* ------------------------- Filtro por tag ---------------------------------- */
-function populateTagFilter(products){
-  const sel=document.getElementById('tagFilter'); if(!sel) return;
-  const base=sel.querySelector('option[value=""]'); sel.innerHTML=''; if(base) sel.appendChild(base);
-  const tags=[...new Set(products.map(p=>(p.tag||'').toLowerCase()))].filter(Boolean).sort();
-  for(const t of tags){
-    const o=document.createElement('option'); o.value=t; o.textContent=t.charAt(0).toUpperCase()+t.slice(1);
-    sel.appendChild(o);
-  }
+function showAlert(type, msg){
+  const bar=document.getElementById('alertBar'); if(!bar) return;
+  const styles={success:'bg-green-50 border border-green-200 text-green-800',
+                warning:'bg-amber-50 border border-amber-200 text-amber-800',
+                error:'bg-red-50 border border-red-200 text-red-800'};
+  const icon={success:'✔',warning:'⚠',error:'⛔'};
+  bar.className='mx-auto max-w-6xl px-4 py-3 rounded-b-xl shadow mt-4 mb-2 '+(styles[type]||styles.warning);
+  bar.setAttribute('role','alert');
+  bar.innerHTML=`<div class="flex items-start gap-3"><div class="text-lg">${icon[type]||'ℹ'}</div>
+    <div class="flex-1">${escapeHtml(msg)}</div>
+    <button aria-label="Cerrar" class="ml-2 px-2 py-1 rounded hover:bg-black/5">✕</button></div>`;
+  bar.querySelector('button')?.addEventListener('click',()=>bar.classList.add('hidden'));
 }
 
-/* ------------------------- WhatsApp ---------------------------------------- */
+/* ------------------------- WhatsApp helpers -------------------------------- */
 function goToWhatsApp(product){
   const text=`Hola, me interesa *${product.name}* (USD ${Number(product.price).toFixed(2)}). ¿Está disponible?`;
   openWhatsApp(text);
@@ -218,30 +254,6 @@ function openWhatsApp(message){
   try{ window.open(url,'_blank'); }catch{ location.href=url; }
 }
 
-/* ------------------------- Acento ----------------------------------------- */
-function applyAccent(primary){
-  const bg=`bg-${primary}`, txt=`text-${primary}`, bd=`border-${primary}`, rg=`ring-${primary}`;
-  document.querySelectorAll('.accent-bg').forEach(el=>el.classList.add(bg));
-  document.querySelectorAll('.accent-text').forEach(el=>el.classList.add(txt));
-  document.querySelectorAll('.accent-border').forEach(el=>el.classList.add(bd));
-  document.querySelectorAll('.accent-ring').forEach(el=>el.classList.add(rg));
-}
-
-/* ------------------------- Alertas ---------------------------------------- */
-function showAlert(type, msg){
-  const bar=document.getElementById('alertBar'); if(!bar) return;
-  const styles={success:'bg-green-50 border border-green-200 text-green-800',
-                warning:'bg-amber-50 border border-amber-200 text-amber-800',
-                error:'bg-red-50 border border-red-200 text-red-800'};
-  const icon={success:'✔',warning:'⚠',error:'⛔'};
-  bar.className='sticky top-14 z-40 mx-auto max-w-6xl px-4 py-3 rounded-b-xl shadow mt-[-1px] mb-2 '+(styles[type]||styles.warning);
-  bar.setAttribute('role','alert');
-  bar.innerHTML=`<div class="flex items-start gap-3"><div class="text-lg">${icon[type]||'ℹ'}</div>
-    <div class="flex-1">${escapeHtml(msg)}</div>
-    <button aria-label="Cerrar" class="ml-2 px-2 py-1 rounded hover:bg-black/5">✕</button></div>`;
-  bar.querySelector('button')?.addEventListener('click',()=>bar.classList.add('hidden'));
-}
-
-/* ------------------------- Utilidades ------------------------------------- */
+/* ------------------------- Utils ------------------------------------------ */
 function escapeHtml(s){return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'","&#039;");}
-function log(scope,...args){console.log(`[store:${scope}]`,...args);}
+function getQuery(key){return new URLSearchParams(location.search).get(key);}
