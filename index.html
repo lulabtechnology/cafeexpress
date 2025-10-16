@@ -38,16 +38,11 @@
       ]
     };
   </script>
-
-  <style>
-    html { scroll-behavior: smooth; }
-  </style>
+  <style>html{scroll-behavior:smooth}</style>
 </head>
 <body class="font-sans text-stone-800 bg-stone-50">
-  <!-- Barra de alertas global -->
-  <div id="alertBar" class="hidden">
-    <!-- se llena desde main.js -->
-  </div>
+  <!-- Barra de alertas -->
+  <div id="alertBar" class="hidden"></div>
 
   <!-- Navbar -->
   <header class="sticky top-0 z-50 bg-white/90 backdrop-blur border-b border-stone-200">
@@ -68,7 +63,7 @@
     </nav>
   </header>
 
-  <!-- Hero / Inicio -->
+  <!-- Hero -->
   <section id="inicio" class="relative">
     <div class="absolute inset-0 -z-10 bg-gradient-to-b from-stone-100 via-stone-50 to-white"></div>
     <div class="max-w-6xl mx-auto px-4 py-16 sm:py-24">
@@ -82,23 +77,15 @@
             Tostado fresco, molido a tu gusto. Pide por WhatsApp en un click.
           </p>
           <div class="mt-6 flex gap-3">
-            <a href="#productos"
-               class="accent-bg text-white px-5 py-3 rounded-lg shadow hover:opacity-90 transition">
-               Ver productos
-            </a>
-            <a href="#historia"
-               class="px-5 py-3 rounded-lg border accent-border text-stone-800 hover:bg-stone-100 transition">
-               Conócenos
-            </a>
+            <a href="#productos" class="accent-bg text-white px-5 py-3 rounded-lg shadow hover:opacity-90 transition">Ver productos</a>
+            <a href="#historia" class="px-5 py-3 rounded-lg border accent-border text-stone-800 hover:bg-stone-100 transition">Conócenos</a>
           </div>
         </div>
         <div class="relative">
-          <img
-            src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1200&q=60"
-            alt="Método pour-over sirviendo café"
-            class="w-full h-64 sm:h-80 md:h-96 object-cover rounded-xl shadow-lg"
-            onerror="this.src='./assets/placeholder.svg';"
-          />
+          <img src="https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1200&q=60"
+               alt="Método pour-over sirviendo café"
+               class="w-full h-64 sm:h-80 md:h-96 object-cover rounded-xl shadow-lg"
+               onerror="this.src='./assets/placeholder.svg';"/>
         </div>
       </div>
     </div>
@@ -121,12 +108,10 @@
           </p>
         </div>
         <div class="rounded-xl overflow-hidden">
-          <img
-            src="https://images.unsplash.com/photo-1461984125293-9eeeca1cf7c0?auto=format&fit=crop&w=1200&q=60"
-            alt="Preparación de café de filtro"
-            class="w-full h-64 sm:h-80 md:h-96 object-cover"
-            onerror="this.src='./assets/placeholder.svg';"
-          />
+          <img src="https://images.unsplash.com/photo-1461984125293-9eeeca1cf7c0?auto=format&fit=crop&w=1200&q=60"
+               alt="Preparación de café de filtro"
+               class="w-full h-64 sm:h-80 md:h-96 object-cover"
+               onerror="this.src='./assets/placeholder.svg';"/>
         </div>
       </div>
     </div>
@@ -140,21 +125,16 @@
           <h2 class="font-display text-3xl">Productos</h2>
           <p class="text-stone-600">Café y accesorios listos para tu ritual.</p>
         </div>
-        <!-- Filtros -->
         <div class="flex flex-col sm:flex-row gap-3 w-full sm:w-auto">
           <input id="searchInput" type="search" placeholder="Buscar (ej. 'granos', 'taza'...)"
-                 class="w-full sm:w-64 rounded-lg border border-stone-300 px-4 py-2 focus:outline-none focus:ring-2 accent-ring" />
+                 class="w-full sm:w-64 rounded-lg border border-stone-300 px-4 py-2 focus:outline-none focus:ring-2 accent-ring"/>
           <select id="tagFilter"
                   class="w-full sm:w-44 rounded-lg border border-stone-300 px-4 py-2 focus:outline-none focus:ring-2 accent-ring">
             <option value="">Todas las categorías</option>
           </select>
         </div>
       </div>
-
-      <!-- Grid -->
-      <div id="productsGrid" class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
-        <!-- Tarjetas se inyectan por JS -->
-      </div>
+      <div id="productsGrid" class="mt-8 grid sm:grid-cols-2 lg:grid-cols-3 gap-6"></div>
     </div>
   </section>
 
@@ -165,25 +145,22 @@
         <div>
           <h2 class="font-display text-3xl">Contacto</h2>
           <p class="mt-2 text-stone-600">¿Tienes dudas? Escríbenos.</p>
-          <button id="waContactBtn"
-                  class="mt-4 accent-bg text-white px-5 py-3 rounded-lg shadow hover:opacity-90 transition">
+          <button id="waContactBtn" class="mt-4 accent-bg text-white px-5 py-3 rounded-lg shadow hover:opacity-90 transition">
             Escríbenos por WhatsApp
           </button>
-          <p class="mt-4 text-sm text-stone-500">
-            Botón sin backend: abre WhatsApp con un mensaje prellenado.
-          </p>
+          <p class="mt-4 text-sm text-stone-500">Botón sin backend: abre WhatsApp con un mensaje prellenado.</p>
         </div>
         <form id="contactForm" class="bg-white rounded-xl border border-stone-200 p-4 sm:p-6 shadow-sm" novalidate>
           <div class="grid sm:grid-cols-2 gap-4">
             <div class="flex flex-col gap-1">
               <label for="name" class="text-sm font-medium">Nombre</label>
               <input id="name" name="name" type="text" required
-                     class="rounded-lg border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 accent-ring" />
+                     class="rounded-lg border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 accent-ring"/>
             </div>
             <div class="flex flex-col gap-1">
               <label for="email" class="text-sm font-medium">Email</label>
               <input id="email" name="email" type="email" required
-                     class="rounded-lg border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 accent-ring" />
+                     class="rounded-lg border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 accent-ring"/>
             </div>
           </div>
           <div class="mt-4 flex flex-col gap-1">
@@ -192,8 +169,7 @@
                       class="rounded-lg border border-stone-300 px-3 py-2 focus:outline-none focus:ring-2 accent-ring"></textarea>
           </div>
           <div class="mt-4">
-            <button type="submit"
-                    class="accent-bg text-white px-5 py-3 rounded-lg shadow hover:opacity-90 transition">
+            <button type="submit" class="accent-bg text-white px-5 py-3 rounded-lg shadow hover:opacity-90 transition">
               Enviar (abre WhatsApp)
             </button>
           </div>
@@ -210,27 +186,18 @@
     </div>
   </footer>
 
-  <!-- Fallback productos para abrir local sin servidor -->
-  <script id="products-fallback" type="application/json">
-[
-  {"id":"beans-ethiopia","name":"Granos Etiopía 250g","description":"Arábica floral y cítrico. Tueste medio.","price":14.99,"image":"https://images.unsplash.com/photo-1445077100181-e2c56abb9f79?auto=format&fit=crop&w=1200&q=60","tag":"granos"},
-  {"id":"beans-colombia","name":"Granos Colombia 250g","description":"Chocolate y caramelo. Tueste medio-oscuro.","price":13.49,"image":"https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=60","tag":"granos"},
-  {"id":"grinder-manual","name":"Molinillo Manual","description":"Muelas cónicas. Ajuste fino a prensa.","price":29.90,"image":"https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=60","tag":"accesorios"},
-  {"id":"mug-ceramic","name":"Taza Cerámica 350ml","description":"Pared gruesa, mantiene la temperatura.","price":9.99,"image":"https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1200&q=60","tag":"accesorios"},
-  {"id":"french-press","name":"Prensa Francesa 600ml","description":"Vidrio templado y émbolo de acero.","price":24.50,"image":"https://images.unsplash.com/photo-1526045478516-99145907023c?auto=format&fit=crop&w=1200&q=60","tag":"equipo"},
-  {"id":"pour-over","name":"Dripper V60 + Jarra","description":"Método limpio y aromático.","price":19.99,"image":"https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1200&q=60","tag":"equipo"},
-  {"id":"cold-brew","name":"Botella Cold Brew 1L","description":"Filtro fino, extracción en frío.","price":22.00,"image":"https://images.unsplash.com/photo-1485808191679-5f865106c7b7?auto=format&fit=crop&w=1200&q=60","tag":"equipo"},
-  {"id":"espresso-maker","name":"Moka Italiana 3 Tazas","description":"Clásica, cuerpo intenso.","price":27.99,"image":"https://images.unsplash.com/photo-1512568400610-62da28bc8a13?auto=format&fit=crop&w=1200&q=60","tag":"equipo"},
-  {"id":"paper-filters","name":"Filtros de Papel (100u)","description":"Compatibles con V60 y similares.","price":6.50,"image":"https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=1200&q=60","tag":"accesorios"},
-  {"id":"milk-frother","name":"Espumador de Leche","description":"Capuccino en casa, en segundos.","price":12.75,"image":"https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?auto=format&fit=crop&w=1200&q=60","tag":"accesorios"}
-]
-  </script>
+  <!-- Fallback local para abrir sin servidor -->
+  <script id="products-fallback" type="application/json">[]</script>
 
   <!-- Config y lógica -->
   <script src="./js/config.js"></script>
   <script src="./js/main.js"></script>
-  <script>
-    document.getElementById('year').textContent = new Date().getFullYear();
-  </script>
+  <script>document.getElementById('year').textContent=new Date().getFullYear();</script>
+
+  <noscript>
+    <div class="max-w-6xl mx-auto px-4 py-4 text-red-700 bg-red-50 border border-red-200 rounded mt-4">
+      Para ver los productos necesitas activar JavaScript.
+    </div>
+  </noscript>
 </body>
 </html>
