@@ -1,0 +1,82 @@
+[
+  {
+    "id": "beans-ethiopia",
+    "name": "Granos Etiopía 250g",
+    "description": "Arábica floral y cítrico. Tueste medio.",
+    "price": 14.99,
+    "image": "https://images.unsplash.com/photo-1445077100181-e2c56abb9f79?auto=format&fit=crop&w=1200&q=60",
+    "tag": "granos"
+  },
+  {
+    "id": "beans-colombia",
+    "name": "Granos Colombia 250g",
+    "description": "Chocolate y caramelo. Tueste medio-oscuro.",
+    "price": 13.49,
+    "image": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=60",
+    "tag": "granos"
+  },
+  {
+    "id": "grinder-manual",
+    "name": "Molinillo Manual",
+    "description": "Muelas cónicas. Ajuste fino a prensa.",
+    "price": 29.90,
+    "image": "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=60",
+    "tag": "accesorios"
+  },
+  {
+    "id": "mug-ceramic",
+    "name": "Taza Cerámica 350ml",
+    "description": "Pared gruesa, mantiene la temperatura.",
+    "price": 9.99,
+    "image": "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1200&q=60",
+    "tag": "accesorios"
+  },
+  {
+    "id": "french-press",
+    "name": "Prensa Francesa 600ml",
+    "description": "Vidrio templado y émbolo de acero.",
+    "price": 24.50,
+    "image": "https://images.unsplash.com/photo-1526045478516-99145907023c?auto=format&fit=crop&w=1200&q=60",
+    "tag": "equipo"
+  },
+  {
+    "id": "pour-over",
+    "name": "Dripper V60 + Jarra",
+    "description": "Método limpio y aromático.",
+    "price": 19.99,
+    "image": "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1200&q=60",
+    "tag": "equipo"
+  },
+  {
+    "id": "cold-brew",
+    "name": "Botella Cold Brew 1L",
+    "description": "Filtro fino, extracción en frío.",
+    "price": 22.00,
+    "image": "https://images.unsplash.com/photo-1485808191679-5f865106c7b7?auto=format&fit=crop&w=1200&q=60",
+    "tag": "equipo"
+  },
+  {
+    "id": "espresso-maker",
+    "name": "Moka Italiana 3 Tazas",
+    "description": "Clásica, cuerpo intenso.",
+    "price": 27.99,
+    "image": "https://images.unsplash.com/photo-1512568400610-62da28bc8a13?auto=format&fit=crop&w=1200&q=60",
+    "tag": "equipo"
+  },
+  {
+    "id": "paper-filters",
+    "name": "Filtros de Papel (100u)",
+    "description": "Compatibles con V60 y similares.",
+    "price": 6.50,
+    "image": "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=1200&q=60",
+    "tag": "accesorios"
+  },
+  {
+    "id": "milk-frother",
+    "name": "Espumador de Leche",
+    "description": "Capuccino en casa, en segundos.",
+    "price": 12.75,
+    "image": "https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?auto=format&fit=crop&w=1200&q=60",
+    "tag": "accesorios"
+  }
+]
