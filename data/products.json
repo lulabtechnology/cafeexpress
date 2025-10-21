@@ -1,82 +1,82 @@
 [
   {
-    "id": "beans-ethiopia",
-    "name": "Granos Etiopía 250g",
-    "description": "Arábica floral y cítrico. Tueste medio.",
-    "price": 14.99,
-    "image": "https://images.unsplash.com/photo-1445077100181-e2c56abb9f79?auto=format&fit=crop&w=1200&q=60",
+    "id": "sampler-5-origenes",
+    "name": "Pack Degustación — 5 Orígenes (5×453g)",
+    "description": "Cinco perfiles distintos para catar en casa: floral, achocolatado, especias suaves y más. Ideal para descubrir tu favorito.",
+    "price": 39.00,
+    "image": "./assets/products/01-sampler.jpg",
     "tag": "granos"
   },
   {
-    "id": "beans-colombia",
-    "name": "Granos Colombia 250g",
-    "description": "Chocolate y caramelo. Tueste medio-oscuro.",
-    "price": 13.49,
-    "image": "https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&w=1200&q=60",
+    "id": "la-protectora-250",
+    "name": "La Protectora 250g",
+    "description": "Tueste medio balanceado. Dulzor amable y final limpio. Perfecto para filtro o prensa.",
+    "price": 11.90,
+    "image": "./assets/products/02-la-protectora.jpg",
     "tag": "granos"
   },
   {
-    "id": "grinder-manual",
-    "name": "Molinillo Manual",
-    "description": "Muelas cónicas. Ajuste fino a prensa.",
-    "price": 29.90,
-    "image": "https://images.unsplash.com/photo-1470337458703-46ad1756a187?auto=format&fit=crop&w=1200&q=60",
-    "tag": "accesorios"
+    "id": "specialty-espresso-500",
+    "name": "Specialty Espresso 500g",
+    "description": "Tueste medio-oscuro para espresso con cuerpo. Notas a cacao y nuez, crema persistente.",
+    "price": 15.90,
+    "image": "./assets/products/03-espresso-negro.jpg",
+    "tag": "granos"
   },
   {
-    "id": "mug-ceramic",
-    "name": "Taza Cerámica 350ml",
-    "description": "Pared gruesa, mantiene la temperatura.",
-    "price": 9.99,
-    "image": "https://images.unsplash.com/photo-1511920170033-f8396924c348?auto=format&fit=crop&w=1200&q=60",
-    "tag": "accesorios"
+    "id": "bolsa-plata-1lb",
+    "name": "Blend Casa 1lb (453g)",
+    "description": "Blend versátil para todos los días. Perfil balanceado: chocolate con leve caramelo.",
+    "price": 13.90,
+    "image": "./assets/products/04-pouch-plata.jpg",
+    "tag": "granos"
   },
   {
-    "id": "french-press",
-    "name": "Prensa Francesa 600ml",
-    "description": "Vidrio templado y émbolo de acero.",
-    "price": 24.50,
-    "image": "https://images.unsplash.com/photo-1526045478516-99145907023c?auto=format&fit=crop&w=1200&q=60",
+    "id": "villa-borghesi-500",
+    "name": "Villa Borghesi 500g",
+    "description": "Tueste italiano clásico. Cuerpo intenso y retrogusto prolongado. Ideal para moka/espresso.",
+    "price": 16.90,
+    "image": "./assets/products/05-villa-borghesi.jpg",
+    "tag": "granos"
+  },
+  {
+    "id": "kit-prensa-francesa",
+    "name": "Kit Prensa Francesa + Café 250g",
+    "description": "Prensa de vidrio con émbolo metálico + bolsa de 250g. Extracción completa y sedosa.",
+    "price": 24.90,
+    "image": "./assets/products/06-prensa-francesa.jpg",
     "tag": "equipo"
   },
   {
-    "id": "pour-over",
-    "name": "Dripper V60 + Jarra",
-    "description": "Método limpio y aromático.",
-    "price": 19.99,
-    "image": "https://images.unsplash.com/photo-1504754524776-8f4f37790ca0?auto=format&fit=crop&w=1200&q=60",
-    "tag": "equipo"
-  },
-  {
-    "id": "cold-brew",
-    "name": "Botella Cold Brew 1L",
-    "description": "Filtro fino, extracción en frío.",
+    "id": "origen-seleccion-1kg",
+    "name": "Selección de Origen 1kg",
+    "description": "Lote seleccionado de temporada. Notas a frutos secos y cacao. Ideal para filtro.",
     "price": 22.00,
-    "image": "https://images.unsplash.com/photo-1485808191679-5f865106c7b7?auto=format&fit=crop&w=1200&q=60",
-    "tag": "equipo"
+    "image": "./assets/products/07-sacos-grano.jpg",
+    "tag": "granos"
   },
   {
-    "id": "espresso-maker",
-    "name": "Moka Italiana 3 Tazas",
-    "description": "Clásica, cuerpo intenso.",
-    "price": 27.99,
-    "image": "https://images.unsplash.com/photo-1512568400610-62da28bc8a13?auto=format&fit=crop&w=1200&q=60",
-    "tag": "equipo"
+    "id": "faldares-medio-250",
+    "name": "Café Faldares 250g — Tueste Medio",
+    "description": "Perfil dulce con medio cuerpo. Excelente para V60 o Chemex.",
+    "price": 12.50,
+    "image": "./assets/products/08-faldares-medio.jpg",
+    "tag": "granos"
   },
   {
-    "id": "paper-filters",
-    "name": "Filtros de Papel (100u)",
-    "description": "Compatibles con V60 y similares.",
-    "price": 6.50,
-    "image": "https://images.unsplash.com/photo-1541167760496-1628856ab772?auto=format&fit=crop&w=1200&q=60",
-    "tag": "accesorios"
+    "id": "faldares-oscuro-250",
+    "name": "Café Faldares 250g — Tueste Oscuro",
+    "description": "Intenso y achocolatado, pensado para espresso o moka. Final tostado.",
+    "price": 12.90,
+    "image": "./assets/products/09-faldares-oscuro.jpg",
+    "tag": "granos"
   },
   {
-    "id": "milk-frother",
-    "name": "Espumador de Leche",
-    "description": "Capuccino en casa, en segundos.",
+    "id": "faldares-molido-250",
+    "name": "Café Faldares 250g — Molido",
+    "description": "Listo para usar. Molienda media estándar para métodos de goteo.",
     "price": 12.75,
-    "image": "https://images.unsplash.com/photo-1510626176961-4b57d4fbad03?auto=format&fit=crop&w=1200&q=60",
-    "tag": "accesorios"
+    "image": "./assets/products/10-faldares-molido.jpg",
+    "tag": "granos"
   }
 ]
